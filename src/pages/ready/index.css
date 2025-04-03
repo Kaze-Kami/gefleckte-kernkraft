@@ -1,0 +1,19 @@
+.ready_wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 40px;
+}
+
+.button.text {
+  padding: 5px;
+  padding-right: 10px;
+  border-radius: 10px;
+  gap: 2px;
+}
+
+.button.text text:not(.icon) {
+  font-size: 1.5rem;
+}

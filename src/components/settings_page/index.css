@@ -1,0 +1,75 @@
+.wrapper {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.valueContainer {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.value {
+  font-size: 3.5rem;
+  font-weight: 800;
+}
+
+.unit {
+  font-size: 1.5rem;
+  font-weight: 100;
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-top: -20px;
+  margin-bottom: 20px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button.square {
+  border-radius: 10px;
+  width: 45px;
+  height: 45px;
+}
+
+.button.round {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.button.primary {
+  background: #d0bcfe;
+  transform: translateY(50%);
+}
+
+.button.primary text {
+  color: #381e72;
+  font-size: 2rem;
+}
+
+.button.secondary {
+  background: #ccc2dc;
+}
+
+.button.secondary text {
+  color: #332d41;
+  font-size: 1.5rem;
+}
