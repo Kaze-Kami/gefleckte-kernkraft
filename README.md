@@ -32,4 +32,5 @@ pnpm run build
 
 ### Native Code
 
-Copy the generated `main.lynx.bundle` from `./dist` to `./app/src/main/assets`. Then simply run / build the app through gradle.
+Copy the generated `main.lynx.bundle` from `./dist` to `./app/mobile/src/main/assets` or `./app/wear/src/main/assets`. 
+Then simply run / build the app through gradle.
