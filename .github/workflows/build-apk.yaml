@@ -43,7 +43,8 @@ jobs:
       - name: Copy Lynx bundle to Android assets
         run: |
           mkdir -p app/src/main/assets
-          cp dist/main.lynx.bundle app/src/main/assets/
+          cp dist/main.lynx.bundle app/wear/src/main/assets/
+          cp dist/main.lynx.bundle app/mobile/src/main/assets/
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -58,12 +59,24 @@ jobs:
       - name: Build APKs
         run: ./gradlew :app:assembleRelease
 
-      - name: Sign APK
+      - name: Sign wear APK
         if: github.event_name != 'pull_request'
         uses: ilharp/sign-android-release@v2
-        id: sign_apk
+        id: sign_wear_apk
         with:
-          releaseDir: app/build/outputs/apk/release
+          releaseDir: app/wear/build/outputs/apk/release
+          signingKey: ${{ secrets.ANDROID_SIGNING_KEY }} # see https://github.com/ilharp/sign-android-release
+          keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          buildToolsVersion: ${{ env.ANDROID_BUILD_TOOLS_VERSION }}
+
+      - name: Sign mobile APK
+        if: github.event_name != 'pull_request'
+        uses: ilharp/sign-android-release@v2
+        id: sign_mobile_apk
+        with:
+          releaseDir: app/mobile/build/outputs/apk/release
           signingKey: ${{ secrets.ANDROID_SIGNING_KEY }} # see https://github.com/ilharp/sign-android-release
           keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
           keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -74,18 +87,22 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           mkdir release
-          cp ${{ steps.sign_apk.outputs.signedFile }} release/app-release.apk
+          cp ${{ steps.sign_wear_apk.outputs.signedFile }} release/wear-release.apk
+          cp ${{ steps.sign_mobile_apk.outputs.signedFile }} release/mobile-release.apk
 
       - name: Dummy signing
         if: github.event_name == 'pull_request'
         run: |
           mkdir release
-          cp app/build/outputs/apk/release/app-release-unsigned.apk release/app-release.apk
+          cp app/wear/build/outputs/apk/release/wear-release-unsigned.apk release/wear-release.apk
+          cp app/mobile/build/outputs/apk/release/mobile-release-unsigned.apk release/mobile-release.apk
 
-      - name: Upload mobile artifact
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: release/app-release.apk
+          path: |
+            release/wear-release.apk
+            release/mobile-release.apk
           name: app-release-apk
 
   release:
@@ -103,6 +120,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/app-release.apk
+          files: |
+            artifacts/wear-release.apk
+            artifacts/mobile-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
