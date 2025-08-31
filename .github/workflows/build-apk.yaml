@@ -15,7 +15,8 @@ env:
 
 jobs:
   build:
-    environment: Release
+    environment: |
+      ${{ github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') && 'Release' || 'Development') || '' }}
     runs-on: ubuntu-latest
 
     steps:
